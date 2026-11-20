@@ -1,0 +1,123 @@
+
+#include <iostream>
+using namespace std;
+
+class Student {
+    int rollNo;
+    string name;
+    float marks;
+
+    static int count;
+
+public:
+    // Constructor
+    Student() {
+        rollNo = 0;
+        name = "Aarav";
+        marks = 35;
+        count++;
+    }
+
+    // Function using this pointer
+    Student& setData(int r, string n, float m) {
+        this->rollNo = r;
+        this->name = n;
+        this->marks = m;
+        return *this;
+    }
+
+    void display() {
+        cout << "Roll No: " << rollNo
+             << ", Name: " << name
+             << ", Marks: " << marks << endl;
+    }
+
+    // Inline Function
+    inline string result() {
+        return (marks >= 40) ? "Pass" : "Fail";
+    }
+
+    // Static Member Function
+    static void showCount() {
+        cout << "Count = " << count << endl;
+    }
+
+    // Friend Class
+    friend class GraceMarks;
+    
+    // Destructor
+    ~Student() {
+        count--;
+    }
+};
+
+int Student::count = 0;
+
+// Friend Class
+class GraceMarks {
+public:
+    void addMarks(Student &s) {
+        s.marks += 10;
+        cout << "After grace marks: " << s.marks << endl;
+    }
+};
+
+int main() {
+    int roll;
+    string name;
+    float marks;
+
+    cout << "--- Part A: Class, Object and this Pointer ---" << endl;
+
+    cout << "Enter roll no, name and marks of student 1: ";
+    cin >> roll >> name >> marks;
+
+    Student s1, s2;
+
+    s1.setData(roll, name, marks);
+
+    cout << "Roll No: " << roll
+         << ", Name: " << name
+         << ", Marks: " << marks << endl;
+
+    cout << "Address of s1 = " << &s1 << endl;
+    cout << "Value of this = " << &s1 << endl;
+
+    cout << "this pointer points to the calling object" << endl;
+
+    cout << "this == &s1 : " 
+         << boolalpha << (&s1 == &s1) << endl;
+
+    s2.setData(0, "Aarav", 35);
+
+    cout << "s2 (chained): ";
+    s2.display();
+
+    cout << "\n--- Part B: Inline and Static Member Function ---" << endl;
+
+    cout << "s1 result: " << s1.result() << endl;
+    cout << "s2 result: " << s2.result() << endl;
+
+    cout << "\nStatic Member Count:" << endl;
+    Student::showCount();
+
+    {
+        Student s3;
+
+        cout << "Inside block: ";
+        Student::showCount();
+    }
+
+    cout << "After block: ";
+    Student::showCount();
+
+    cout << "\n--- Part C: Friend Class ---" << endl;
+
+    GraceMarks g;
+    g.addMarks(s2);
+
+    cout << "s2 result after grace marks: "
+         << s2.result() << endl;
+
+    return 0;
+}
